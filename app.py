@@ -454,7 +454,7 @@ def determine_search_need(query: str, api_key: str) -> dict:
     Returns: {"need_search": bool, "reason": str, "search_query": str}
     """
     llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-flash",
+        model="gemini-pro",
         api_key=api_key,
         temperature=0.7,
     )
@@ -682,7 +682,7 @@ if final_query:
                     context = "\n\n".join([doc.page_content for doc in docs])
 
                 llm = ChatGoogleGenerativeAI(
-                    model="gemini-1.5-flash",
+                    model="gemini-pro",
                     google_api_key=st.secrets["GOOGLE_API_KEY"],
                     streaming=True,
                     temperature=0.7,
@@ -782,7 +782,7 @@ if final_query:
 
                     # LLM으로 웹 검색 결과 분석
                     llm = ChatGoogleGenerativeAI(
-                        model="gemini-1.5-flash",
+                        model="gemini-pro",
                         google_api_key=st.secrets["GOOGLE_API_KEY"],
                         streaming=True,
                         temperature=0.7,
@@ -816,7 +816,7 @@ if final_query:
                     mode_badge = '<span class="mode-badge" style="background-color:#fff3e0;color:#e65100;">🧠 AI 직접 답변</span>'
 
                     llm = ChatGoogleGenerativeAI(
-                        model="gemini-1.5-flash",
+                        model="gemini-pro",
                         google_api_key=st.secrets["GOOGLE_API_KEY"],
                         streaming=True,
                         temperature=0.7,
