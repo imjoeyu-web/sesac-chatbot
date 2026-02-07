@@ -1,10 +1,7 @@
-streamlit
-langchain
-langchain-openai
-langchain-community
-pypdf
-faiss-cpu
-python-dotenv
-torchvision
-torch
-langsmith
+streamlit==1.31.0
+langchain==0.1.9
+langchain-openai==0.0.6
+langchain-community==0.0.24
+faiss-cpu==1.7.4
+pypdf==4.0.1
+requests==2.31.0

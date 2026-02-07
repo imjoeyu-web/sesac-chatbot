@@ -14,9 +14,10 @@ from langchain_community.vectorstores import FAISS
 # ============================================================
 # LangSmith 추적 설정
 # ============================================================
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_API_KEY"] = st.secrets["LANGCHAIN_API_KEY"]
-os.environ["LANGCHAIN_PROJECT"] = "SeSAC-ChatBot"
+# LangSmith는 선택사항입니다. 필요없다면 이 섹션 전체를 삭제하셔도 됩니다.
+# os.environ["LANGCHAIN_TRACING_V2"] = "true"
+# os.environ["LANGCHAIN_API_KEY"] = st.secrets.get("LANGCHAIN_API_KEY", "")
+# os.environ["LANGCHAIN_PROJECT"] = "AI-HR-Consultant"
 
 
 # ============================================================
@@ -53,7 +54,7 @@ PROMPTS = {
         {{"need_search": false, "reason": "이유", "search_query": ""}}""",
     # 3. 웹 검색 결과 분석용 프롬프트
     # {web_context} 부분에 검색 결과가 자동 삽입됨
-    "web_search": """너는 SeSAC 성동캠퍼스의 전문 상담 AI야.
+    "web_search": """너는 IT 취업 및 커리어 전문 컨설턴트야.
 
         아래는 사용자 질문과 관련된 웹 검색 결과입니다. 
         이 정보를 바탕으로 종합적으로 분석하여 답변해주세요.
@@ -69,21 +70,18 @@ PROMPTS = {
 
 # RAG 키워드 목록 (이 키워드가 포함되면 RAG 모드로 작동)
 RAG_KEYWORDS = [
-    "sesac",
-    "새싹",
-    "성동",
-    "캠퍼스",
     "교육",
     "과정",
     "수강",
+    "커리큘럼",
 ]
 
 # ============================================================
 # 페이지 및 기본 설정
 # ============================================================
 st.set_page_config(
-    page_title="새싹 스마트 AI 취업 컨설턴트",
-    page_icon="🤖",
+    page_title="AI 취업 컨설턴트",
+    page_icon="🎯",
     layout="wide",
 )
 
@@ -437,7 +435,7 @@ def search_web(query: str, sources: list, num_results: int = 5) -> list:
 def classify_query(query: str, has_vector_store: bool) -> str:
     """
     질문을 분류하여 RAG / LLM / 웹 검색으로 분기
-    1. SeSAC, 새싹, 교육 관련 → RAG
+    1. 교육, 과정 관련 → RAG
     2. 그 외 → LLM이 판단 (AUTO)
     """
     query_lower = query.lower()
@@ -457,9 +455,9 @@ def determine_search_need(query: str, api_key: str) -> dict:
     Returns: {"need_search": bool, "reason": str, "search_query": str}
     """
     llm = ChatOpenAI(
-        model="gpt-5-mini",
+        model="gpt-4o-mini",
         api_key=api_key,
-        temperature=1,
+        temperature=0.7,
     )
 
     # 헬퍼 함수를 통해 프롬프트 생성
@@ -517,7 +515,7 @@ with st.sidebar:
             unsafe_allow_html=True,
         )
     else:
-        st.title(" 🤖SeSAC AI 취업 컨설턴트")
+        st.title("💼 AI 취업 컨설턴트")
 
     st.divider()
 
@@ -602,10 +600,10 @@ PREDEFINED_ANSWERS = {
 # 메인 화면
 # ============================================================
 st.markdown(
-    "<h2 style='color: #0066cc;'>SeSAC AI 취업 컨설턴트</h2>", unsafe_allow_html=True
+    "<h2 style='color: #0066cc;'>AI 취업 컨설턴트</h2>", unsafe_allow_html=True
 )
 st.caption(
-    "🚀 AI 취업 컨설턴트 | PDF 공고 분석부터 최신 채용 트렌드 검색까지, 당신만의 합격 전략을 설계합니다."
+    "💼 AI 취업 컨설턴트 | 채용 공고 분석, 면접 준비, 이력서 첨삭까지 당신의 커리어를 지원합니다."
 )
 
 st.markdown("### 💡 무엇을 물어봐야 할지 모르겠다면? 클릭해서 가이드를 확인하세요!")
@@ -672,7 +670,7 @@ if final_query:
 
         try:
             if query_type == "RAG":
-                # RAG 모드 (SeSAC/교육 관련)
+                # RAG 모드 (교육 관련)
                 mode_badge = (
                     '<span class="mode-badge mode-rag">📚 RAG 모드 (교육 정보)</span>'
                 )
@@ -685,10 +683,10 @@ if final_query:
                     context = "\n\n".join([doc.page_content for doc in docs])
 
                 llm = ChatOpenAI(
-                    model="gpt-5-mini",
+                    model="gpt-4o-mini",
                     api_key=st.secrets["OPENAI_API_KEY"],
                     streaming=True,
-                    temperature=1,
+                    temperature=0.7,
                 )
 
                 # 헬퍼 함수를 통해 프롬프트 생성
@@ -785,10 +783,10 @@ if final_query:
 
                     # LLM으로 웹 검색 결과 분석
                     llm = ChatOpenAI(
-                        model="gpt-5-mini",
+                        model="gpt-4o-mini",
                         api_key=st.secrets["OPENAI_API_KEY"],
                         streaming=True,
-                        temperature=1,
+                        temperature=0.7,
                     )
 
                     # 헬퍼 함수를 통해 프롬프트 생성
@@ -819,10 +817,10 @@ if final_query:
                     mode_badge = '<span class="mode-badge" style="background-color:#fff3e0;color:#e65100;">🧠 AI 직접 답변</span>'
 
                     llm = ChatOpenAI(
-                        model="gpt-5-mini",
+                        model="gpt-4o-mini",
                         api_key=st.secrets["OPENAI_API_KEY"],
                         streaming=True,
-                        temperature=1,
+                        temperature=0.7,
                     )
 
                     # 헬퍼 함수를 통해 프롬프트 생성
