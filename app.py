@@ -14,10 +14,9 @@ from langchain_community.vectorstores import FAISS
 # ============================================================
 # LangSmith 추적 설정
 # ============================================================
-# LangSmith는 선택사항입니다. 필요없다면 이 섹션 전체를 삭제하셔도 됩니다.
-# os.environ["LANGCHAIN_TRACING_V2"] = "true"
-# os.environ["LANGCHAIN_API_KEY"] = st.secrets.get("LANGCHAIN_API_KEY", "")
-# os.environ["LANGCHAIN_PROJECT"] = "AI-HR-Consultant"
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_API_KEY"] = st.secrets.get("LANGCHAIN_API_KEY", "")
+os.environ["LANGCHAIN_PROJECT"] = "AI-Job-Consultant"
 
 
 # ============================================================
